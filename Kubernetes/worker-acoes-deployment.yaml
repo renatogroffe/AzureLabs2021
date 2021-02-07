@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workeracoes-deployment
+  labels:
+    app: workeracoes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workeracoes
+  template:
+    metadata:
+      labels:
+        app: workeracoes
+    spec:
+      containers:
+      - name: workeracoes
+        image: renatogroffe/workeracoes-azurelabs:latest
+        env:
+          - name: ApplicationInsights__InstrumentationKey
+            value: CHAVE DE INSTRUMENTACAO
+          - name: ApacheKafka__GroupId
+            value: WorkerAcoes
+          - name: ConnectionStrings__AppConfiguration
+            valueFrom:
+                secretKeyRef:
+                  name: acoes-secrets
+                  key: AppConfiguration
+        ports:
+        - containerPort: 80

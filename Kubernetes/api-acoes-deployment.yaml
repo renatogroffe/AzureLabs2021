@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apiacoes-deployment
+  labels:
+    app: apiacoes
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: apiacoes
+  template:
+    metadata:
+      labels:
+        app: apiacoes
+    spec:
+      containers:
+      - name: apiacoes
+        image: renatogroffe/apiacoes-azurelabs:latest
+        env:
+          - name: ApplicationInsights__InstrumentationKey
+            value: CHAVE DE INSTRUMENTACAO
+          - name: ConnectionStrings__AppConfiguration
+            valueFrom:
+                secretKeyRef:
+                  name: acoes-secrets
+                  key: AppConfiguration
+        ports:
+        - containerPort: 80
